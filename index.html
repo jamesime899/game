@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ผจญภัยโลกกระดูกมหัศจรรย์ | เกมวิทยาศาสตร์ ป.3</title>
+  <meta name="description" content="เกมการเรียนรู้วิทยาศาสตร์สำหรับนักเรียนชั้น ป.3 เรื่องกระดูกของมนุษย์ ผจญภัย 7 ด่าน พร้อมระบบบันทึกคะแนนลง Google Sheets">
+  <meta name="theme-color" content="#38bdf8">
+
+  <!-- Google Fonts: Itim & Prompt (เหมาะกับเด็กและอ่านง่าย) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Itim&family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- ฉากพื้นหลังแฟนตาซีพร้อมไอคอนลอยละล่อง -->
+  <div class="bg-decorations" aria-hidden="true">
+    <div class="floating-item bone b1">🦴</div>
+    <div class="floating-item star s1">⭐</div>
+    <div class="floating-item bone b2">🦴</div>
+    <div class="floating-item star s2">✨</div>
+    <div class="floating-item heart h1">💖</div>
+    <div class="floating-item bone b3">🦴</div>
+    <div class="floating-item star s3">🌟</div>
+  </div>
+
+  <!-- แถบด้านบน (Top Bar) -->
+  <header class="top-nav">
+    <div class="brand">
+      <span class="brand-icon">🦴</span>
+      <span class="brand-title">โลกกระดูกมหัศจรรย์</span>
+      <span class="grade-badge">วิทย์ ป.3</span>
+    </div>
+    <div class="nav-actions">
+      <button id="btn-sound" class="btn-icon" title="เปิด/ปิดเสียง" aria-label="เปิดหรือปิดเสียง">
+        <span id="sound-icon">🔊</span>
+      </button>
+      <button id="btn-guide" class="btn-icon" title="คู่มือครูและวิธีเชื่อมต่อ" aria-label="คู่มือครู">
+        <span>📖</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="game-container">
+    <!-- ================= 1. หน้าต้อนรับและกรอกชื่อ (Welcome Screen) ================= -->
+    <section id="screen-welcome" class="game-card screen active">
+      <div class="mascot-badge">
+        <div class="mascot-avatar">
+          <svg viewBox="0 0 120 120" class="mascot-svg" width="110" height="110">
+            <!-- Cute Bone Mascot "น้องโบนนี่" -->
+            <defs>
+              <radialGradient id="gradMascot" cx="30%" cy="30%" r="70%">
+                <stop offset="0%" stop-color="#ffffff"/>
+                <stop offset="100%" stop-color="#e0f2fe"/>
+              </radialGradient>
+              <linearGradient id="hatGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#f59e0b"/>
+                <stop offset="100%" stop-color="#b45309"/>
+              </linearGradient>
+            </defs>
+            <!-- เงาตัว -->
+            <ellipse cx="60" cy="112" rx="35" ry="6" fill="rgba(0,0,0,0.1)"/>
+            <!-- ตัวกระดูกการ์ตูนกลมน่ารัก -->
+            <rect x="45" y="42" width="30" height="58" rx="15" fill="url(#gradMascot)" stroke="#0284c7" stroke-width="3.5"/>
+            <!-- หัวกระดูกด้านบนกลม 2 ข้าง -->
+            <circle cx="44" cy="46" r="14" fill="url(#gradMascot)" stroke="#0284c7" stroke-width="3.5"/>
+            <circle cx="76" cy="46" r="14" fill="url(#gradMascot)" stroke="#0284c7" stroke-width="3.5"/>
+            <!-- ขากระดูกด้านล่างกลม 2 ข้าง -->
+            <circle cx="44" cy="95" r="14" fill="url(#gradMascot)" stroke="#0284c7" stroke-width="3.5"/>
+            <circle cx="76" cy="95" r="14" fill="url(#gradMascot)" stroke="#0284c7" stroke-width="3.5"/>
+            <!-- หมวกนักสำรวจสีน้ำตาลทอง -->
+            <ellipse cx="60" cy="38" rx="32" ry="7" fill="url(#hatGrad)"/>
+            <path d="M40 38 Q60 14 80 38 Z" fill="url(#hatGrad)"/>
+            <rect x="39" y="34" width="42" height="4" fill="#78350f" rx="2"/>
+            <circle cx="60" cy="27" r="4" fill="#fef08a"/>
+            <!-- ตาแป๋ว -->
+            <ellipse cx="50" cy="62" rx="4.5" ry="6" fill="#1e293b"/>
+            <ellipse cx="70" cy="62" rx="4.5" ry="6" fill="#1e293b"/>
+            <!-- ไฮไลท์ตา -->
+            <circle cx="48.5" cy="60" r="1.8" fill="#ffffff"/>
+            <circle cx="68.5" cy="60" r="1.8" fill="#ffffff"/>
+            <!-- แก้มอมชมพู -->
+            <ellipse cx="43" cy="69" rx="5" ry="3" fill="#f472b6" opacity="0.6"/>
+            <ellipse cx="77" cy="69" rx="5" ry="3" fill="#f472b6" opacity="0.6"/>
+            <!-- รอยยิ้ม -->
+            <path d="M53 70 Q60 78 67 70" fill="none" stroke="#1e293b" stroke-width="3" stroke-linecap="round"/>
+            <!-- แว่นขยายน้อยถือข้างตัว -->
+            <circle cx="88" cy="74" r="10" fill="rgba(255,255,255,0.7)" stroke="#f59e0b" stroke-width="3"/>
+            <line x1="95" y1="81" x2="105" y2="92" stroke="#b45309" stroke-width="4" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </div>
+
+      <h1 class="game-title">ผจญภัยโลกกระดูกมหัศจรรย์</h1>
+      <p class="game-subtitle">มาร่วมเป็นนักสำรวจตัวน้อย ไขความลับของโครงกระดูกมนุษย์ 7 ด่านสุดตื่นเต้น!</p>
+
+      <div class="welcome-box">
+        <label for="player-name-input" class="input-label">
+          <span>🎒</span> พิมพ์ชื่อของหนูเพื่อเริ่มผจญภัย:
+        </label>
+        <div class="input-wrapper">
+          <input 
+            type="text" 
+            id="player-name-input" 
+            placeholder="ตัวอย่าง: เด็กชายต้นกล้า ป.3/1" 
+            maxlength="40" 
+            autocomplete="name"
+          >
+        </div>
+        <div id="name-error" class="error-text" style="display: none;">
+          ⚠️ กรุณาพิมพ์ชื่อก่อนเริ่มเล่นนะจ๊ะ!
+        </div>
+
+        <div class="feature-pills">
+          <span class="pill">🌟 7 ด่านความรู้</span>
+          <span class="pill">🛡️ ตอบใหม่ได้ไม่หักคะแนน</span>
+          <span class="pill">🏆 ลุ้นเหรียญทอง</span>
+          <span class="pill">📊 บันทึกคะแนนอัตโนมัติ</span>
+        </div>
+
+        <button id="btn-start-game" class="btn btn-primary btn-bounce">
+          <span class="btn-text">🚀 เริ่มเกมผจญภัย!</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ================= 2. หน้าเล่นเกม 7 ด่าน (Play Screen) ================= -->
+    <section id="screen-game" class="game-card screen">
+      <!-- ข้อมูลผู้เล่นและตัวนับ -->
+      <div class="game-stats-header">
+        <div class="player-tag">
+          <span class="tag-icon">🧒</span>
+          <span id="display-player-name" class="tag-name">นักสำรวจน้อย</span>
+        </div>
+        <div class="stat-badge time-badge">
+          <span class="stat-icon">⏱️</span>
+          <span id="display-timer">00:00</span>
+        </div>
+        <div class="stat-badge score-badge">
+          <span class="stat-icon">⭐</span>
+          <span id="display-score">0</span>
+          <span class="stat-unit">คะแนน</span>
+        </div>
+      </div>
+
+      <!-- แถบแสดงความคืบหน้า (Progress Map) -->
+      <div class="stage-progress-card">
+        <div class="progress-info-row">
+          <span class="stage-label">
+            🗺️ <strong id="stage-number-text">ด่านที่ 1</strong> จาก 7 ด่าน
+          </span>
+          <span class="stage-percent" id="stage-percent-text">14%</span>
+        </div>
+        <div class="progress-track" aria-label="แถบความคืบหน้า">
+          <div id="progress-bar-fill" class="progress-fill" style="width: 14%;"></div>
+        </div>
+        <div class="stage-dots-row" id="stage-dots-container">
+          <!-- สร้างปุ่มหมุดด่าน 1-7 ด้วย JavaScript -->
+        </div>
+      </div>
+
+      <!-- กล่องโจทย์คำถาม -->
+      <div class="question-container">
+        <div class="question-header">
+          <span id="stage-badge-name" class="stage-theme-tag">ด่าน 1: ปราการกะโหลกศีรษะ</span>
+          <span id="retry-badge" class="retry-counter-tag" style="display: none;">ลองใหม่ครั้งที่ 1</span>
+        </div>
+        <h2 id="question-text" class="question-text">
+          กำลังโหลดโจทย์คำถาม...
+        </h2>
+      </div>
+
+      <!-- กล่องตัวเลือกคำตอบ 4 ตัวเลือก -->
+      <div id="choices-container" class="choices-grid" role="radiogroup" aria-label="ตัวเลือกคำตอบ">
+        <!-- ช้อยส์ 4 ตัวเลือกจะถูกสร้างและสุ่มลำดับด้วย JavaScript -->
+      </div>
+
+      <!-- แถบปุ่มส่งคำตอบ -->
+      <div class="action-footer">
+        <button id="btn-submit-answer" class="btn btn-action" disabled>
+          <span class="btn-text">✏️ ยืนยันคำตอบ</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ================= 3. หน้าสรุปผลคะแนนและเหรียญรางวัล (Summary Screen) ================= -->
+    <section id="screen-summary" class="game-card screen">
+      <div class="summary-celebration">
+        <div id="medal-icon-container" class="medal-bounce">
+          🥇
+        </div>
+        <h2 id="summary-title" class="summary-heading">ยอดเยี่ยมที่สุดเลย!</h2>
+        <p id="summary-subtitle" class="summary-sub">คุณผ่านการผจญภัยครบทั้ง 7 ด่านแล้ว</p>
+      </div>
+
+      <!-- การ์ดรายละเอียดผลการเล่น -->
+      <div class="summary-stats-grid">
+        <div class="stat-box">
+          <span class="stat-box-icon">🧒</span>
+          <span class="stat-box-label">ชื่อนักสำรวจ</span>
+          <span id="result-name" class="stat-box-val">-</span>
+        </div>
+        <div class="stat-box highlight">
+          <span class="stat-box-icon">⭐</span>
+          <span class="stat-box-label">คะแนนรวม</span>
+          <span id="result-score" class="stat-box-val">0</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-box-icon">🎯</span>
+          <span class="stat-box-label">ผ่านด่าน</span>
+          <span id="result-correct" class="stat-box-val">7 / 7 ข้อ</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-box-icon">💡</span>
+          <span class="stat-box-label">ตอบใหม่</span>
+          <span id="result-wrong" class="stat-box-val">0 ครั้ง</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-box-icon">⏱️</span>
+          <span class="stat-box-label">เวลาที่ใช้</span>
+          <span id="result-time" class="stat-box-val">00:00</span>
+        </div>
+        <div class="stat-box highlight-medal">
+          <span class="stat-box-icon">🎖️</span>
+          <span class="stat-box-label">เหรียญเกียรติยศ</span>
+          <span id="result-medal" class="stat-box-val">เหรียญทองคำ</span>
+        </div>
+      </div>
+
+      <!-- กล่องข้อความให้กำลังใจจากคุณครู / น้องโบนนี่ -->
+      <div class="feedback-card">
+        <div class="feedback-avatar">🦴</div>
+        <div class="feedback-content">
+          <h3 class="feedback-author">คำชมจากน้องโบนนี่:</h3>
+          <p id="result-feedback-text">
+            หนูเก่งมาก ๆ เลย มีความรู้เรื่องกระดูกมนุษย์ดีเยี่ยม อย่าลืมดื่มนมและออกกำลังกายทุกวันเพื่อให้กระดูกแข็งแรงนะจ๊ะ!
+          </p>
+        </div>
+      </div>
+
+      <!-- สถานะการบันทึกลง Google Sheets -->
+      <div id="sheets-sync-status" class="sheets-status-card">
+        <div class="sync-spinner" id="sync-spinner"></div>
+        <span id="sync-message">กำลังเชื่อมต่อเพื่อส่งผลคะแนนเข้า Google Sheets...</span>
+      </div>
+
+      <!-- ปุ่มดำเนินการต่อ -->
+      <div class="summary-actions">
+        <button id="btn-play-again" class="btn btn-primary btn-bounce">
+          <span class="btn-text">🔄 เล่นใหม่อีกครั้ง</span>
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <!-- ================= ป๊อปอัปเมื่อตอบถูก (Correct Modal) ================= -->
+  <div id="modal-correct" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-box modal-success animate-pop">
+      <div class="modal-emoticon">🎉✨</div>
+      <h3 class="modal-title text-success">ถูกต้องนะคร้าบ! เก่งมากๆ</h3>
+      <p id="correct-praise-text" class="modal-desc">
+        คุณตอบถูกต้องและได้รับ 10 คะแนน!
+      </p>
+      <div class="knowledge-snack">
+        <span class="snack-icon">💡</span>
+        <span id="correct-fact-text" class="snack-text">
+          สาระน่ารู้ของด่านนี้
+        </span>
+      </div>
+      <button id="btn-next-stage" class="btn btn-success btn-bounce">
+        <span class="btn-text">ไปต่อด่านถัดไป ➔</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ================= ป๊อปอัปเมื่อตอบผิด (Incorrect Hint Modal) ================= -->
+  <div id="modal-wrong" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-box modal-hint animate-pop">
+      <div class="modal-emoticon">🤔💭</div>
+      <h3 class="modal-title text-warning">ยังไม่ตรงนะจ๊ะ! ไม่เป็นไรนะ</h3>
+      <p class="modal-desc">
+        มาดูคำใบ้พิเศษกัน แล้วลองเลือกคำตอบใหม่อีกครั้งได้เลย ไม่หักคะแนนจ้า
+      </p>
+      <div class="hint-card">
+        <div class="hint-badge">🔍 คำใบ้จากน้องโบนนี่:</div>
+        <p id="wrong-hint-text" class="hint-content">คำใบ้จะปรากฏตรงนี้</p>
+      </div>
+      <button id="btn-retry-stage" class="btn btn-warning btn-bounce">
+        <span class="btn-text">💪 ขอลองตอบใหม่อีกรอบ!</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ================= ป๊อปอัปคู่มือครูและการเชื่อมต่อ Google Sheets ================= -->
+  <div id="modal-guide" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-box modal-wide animate-pop">
+      <div class="modal-header-row">
+        <h3 class="modal-title">📖 คู่มือสำหรับคุณครู & ข้อมูลระบบ</h3>
+        <button id="btn-close-guide" class="btn-close" aria-label="ปิด">✕</button>
+      </div>
+      <div class="guide-scroll-content">
+        <section class="guide-section">
+          <h4>🌟 เกี่ยวกับเกม</h4>
+          <p>
+            เกม <strong>“ผจญภัยโลกกระดูกมหัศจรรย์”</strong> ออกแบบมาเพื่อเสริมการเรียนรู้วิทยาศาสตร์ ระดับชั้น ป.3 
+            เน้นการเสริมแรงทางบวก (Positive Reinforcement) หากเด็กตอบผิดจะมีคำใบ้และอนุญาตให้ลองใหม่ได้ทันทีโดยไม่หักคะแนน 
+            เพื่อสร้างความมั่นใจและความสุขในการเรียนรู้
+          </p>
+        </section>
+
+        <section class="guide-section">
+          <h4>📊 การเชื่อมต่อ Google Sheets</h4>
+          <p>
+            เกมนี้ผูกกับ Google Sheets ID: <br>
+            <code class="code-pill">1MaT7ui18SbEBmvvRvHhP-ECM-DGncDXEjQr13xqbZmc</code>
+          </p>
+          <div class="gas-config-box">
+            <label for="custom-gas-url"><strong>ลิงก์ Web App URL ของ Google Apps Script:</strong></label>
+            <input 
+              type="url" 
+              id="custom-gas-url" 
+              class="input-gas" 
+              value="https://script.google.com/macros/s/AKfycbx0IPSvXDe6AbncxvMVmohTWdkMMEw21DipoPu-OeHwaabZbcdJaXWZULgbL2vlvphk/exec"
+              placeholder="https://script.google.com/macros/s/.../exec"
+            >
+            <div class="gas-btn-row">
+              <button id="btn-save-gas" class="btn btn-small btn-primary">💾 บันทึก URL</button>
+              <button id="btn-test-gas" class="btn btn-small btn-outline">🧪 ทดสอบส่งข้อมูล</button>
+            </div>
+            <p id="gas-test-msg" class="status-msg"></p>
+          </div>
+          <p class="small-tip">
+            *ดูโค้ด Apps Script พร้อมใช้งานและวิธีติดตั้ง 3 นาทีได้ในไฟล์ <code>README.md</code> หรือ <code>google-script.js</code>
+          </p>
+        </section>
+
+        <section class="guide-section">
+          <h4>🚀 นำขึ้น GitHub Pages</h4>
+          <ol class="guide-steps">
+            <li>สร้าง GitHub Repository ใหม่</li>
+            <li>อัปโหลดไฟล์ <code>index.html</code>, <code>style.css</code>, <code>script.js</code>, <code>google-script.js</code></li>
+            <li>ไปที่ Settings > Pages > เลือก Branch <code>main</code> แล้วกด Save</li>
+            <li>ได้เว็บพร้อมให้นักเรียนเปิดเล่นบนมือถือ แท็บเล็ต หรือคอมพิวเตอร์ทันที!</li>
+          </ol>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <!-- Canvas สำหรับเอฟเฟกต์พลุและคอนเฟตติเฉลิมฉลอง -->
+  <canvas id="confetti-canvas" aria-hidden="true"></canvas>
+
+  <script src="script.js"></script>
+</body>
+</html>
